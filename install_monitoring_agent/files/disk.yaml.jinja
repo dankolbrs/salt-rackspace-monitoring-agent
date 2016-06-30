@@ -1,0 +1,19 @@
+
+type: agent.filesystem
+label: disk {{ dev_abbr }} -- {{ mountpoint }}  space
+disabled: false
+period: 60
+timeout: 30
+details:
+  target: {{ mountpoint }}
+alarms:
+  ops:
+    label: disk used alarm
+    notification_plan_id: {{ pillar['rackspace']['notification_plan_id'] }}
+    criteria: |
+      if (percentage(metric['used'], metric['total']) > {{ pillar['checks']['disk:critical'] }} ) {
+        return new AlarmStatus(CRITICAL, 'Disk space used greater than critical of {{ pillar['checks']['disk:critical'] }}%.');
+      }
+      if (percentage(metric['used'], metric['total']) > {{ pillar['checks']['disk:warning'] }} ) {
+        return new AlarmStatus(WARNING, 'Disk space used greater than critical of {{ pillar['checks']['disk:warning'] }}%.');
+      }

@@ -1,0 +1,22 @@
+{% set url=salt['pillar.get']('checks:curl')[0] -%}
+{% set subdomain= url.split('/')[2].split('.')[0] -%}
+
+type: agent.plugin
+label: curl {{ url }} check
+disabled: false
+period: 60
+timeout: 30
+details:
+  file: curl_check.sh
+  args: {{ salt['pillar.get']('checks:curl') }}
+alarms:
+  ops:
+    label: curl {{ url }} check
+    notification_plan_id: {{ pillar['rackspace']['notification_plan_id'] }}
+    criteria: |
+      if (metric['time_connect'] > 4) {
+        return new AlarmStatus(CRITICAL, 'Greater than 4 second connect');
+      }
+      if (metric['time_connect'] > 3) {
+        return new AlarmStatus(WARNING, 'Greater than 3 second connect');
+      }

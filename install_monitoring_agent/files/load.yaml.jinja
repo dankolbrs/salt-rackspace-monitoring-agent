@@ -1,0 +1,16 @@
+type: agent.load_average
+label: Load average
+disabled: false
+period: 60
+timeout: 30
+alarms:
+  opts:
+    label: Load average
+    notification_plan_id: {{ pillar['rackspace']['notification_plan_id'] }}
+    criteria: |
+      if (metric['5m'] > {{ grains['num_cpus'] }}) {
+        return new AlarmStatus(CRITICAL, 'Load average is #{5m}, greater than number of CPUS {{ grains['num_cpus'] }}');
+      }
+      if (metric['5m'] > {{ grains['num_cpus'] / 2 }}) {
+        return new AlarmStatus(WARNING, 'Load average is #{5m} greater than {{ grains['num_cpus'] / 2 }}');
+      }

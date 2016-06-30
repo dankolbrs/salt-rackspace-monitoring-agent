@@ -1,0 +1,16 @@
+type: agent.memory
+label: memory usage
+disabled: false
+period: 60
+timeout: 30
+alarms:
+  ops:
+    label: memory used alarm
+    notification_plan_id: {{ pillar['rackspace']['notification_plan_id'] }}
+    criteria: |
+      if (percentage(metric['actual_used'], metric['total']) > {{ pillar['checks']['memory:critical'] }} ) {
+        return new AlarmStatus(CRITICAL, 'Memory usage is above your CRITICAL threshold of {{ pillar['checks']['memory:critical'] }}%.');
+      }
+      if (percentage(metric['actual_used'], metric['total']) > {{ pillar['checks']['memory:warning'] }}) {
+        return new AlarmStatus(WARNING, 'Memory usage is above your WARNING threshold of {{ pillar['checks']['memory:warning'] }}%.');
+      }
