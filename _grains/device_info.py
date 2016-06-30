@@ -1,6 +1,6 @@
 #! /usr/bin/env python
 # used to get network interface as list in grains
-# Dan Kolb <dan.kolb@rackspace.com> June 2016
+# Dan Kolb <github@dankolb.net> June 2016
 
 import salt.utils.network
 import salt.modules.cmdmod
